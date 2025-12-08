@@ -1,0 +1,379 @@
+
+
+
+
+
+
+
+# 1. **System Purpose**
+
+The system simplifies how citizens report issues such as:
+
+* Water pipeline breakages
+* Garbage not collected
+* Damaged roads
+* Broken or dark street lights
+* House number registration
+* ID support and verification issues
+* Any public infrastructure problem
+
+The goal is to:
+
+* Make communication faster
+* Improve transparency
+* Track work efficiency
+* Reduce corruption or cases of “lost reports”
+* Reduce paperwork
+* Give citizens real-time updates
+
+---
+
+# 2. **Main Users of the System**
+
+The portal is used by **three major roles**:
+
+### 1) **Citizen**
+
+* Submits complaints or service requests
+* Attaches pictures and a map location
+* Can track progress of their request
+* Gets notifications when status changes
+* Can give feedback after completion
+
+### 2) **Employee (Municipal Worker)**
+
+* Sees the requests assigned to them
+* Visits the location and investigates
+* Uploads progress updates
+* Changes status from “Pending” → “In Progress” → “Completed”
+* Communicates with citizen if needed
+
+### 3) **Admin (Municipal Officer / Manager)**
+
+* Views all requests from the whole municipality
+* Assigns tasks to employees or departments
+* Manages categories (water, roads, sanitation, etc.)
+* Tracks employee performance
+* Generates analytics and reports
+* Handles escalations and complaints
+
+---
+
+# 3. **Core Features of the System**
+
+### ✔ **1. Citizen Request Submission**
+
+A citizen opens the app or website and fills in a simple form:
+
+* Title (e.g., “Broken water pipe”)
+* Description
+* Category (road, water, garbage, streetlight, etc.)
+* Exact location on a map
+* Upload one or more pictures
+* Contact info (phone, email)
+
+After submitting:
+
+* A unique request ID is created
+* The system marks it as **Pending**
+* Citizen receives confirmation
+* The request is visible to admin
+
+---
+
+### ✔ **2. Request Status Tracking**
+
+Every request passes through a workflow:
+
+1. **Pending**
+   Citizen just submitted and waiting for admin review.
+
+2. **Assigned**
+   Admin assigns it to a worker or a department.
+
+3. **In Progress**
+   Employee is working on the issue.
+
+4. **Completed**
+   Work finished and proof uploaded.
+
+5. **Closed**
+   Citizen approves the completion.
+
+6. **Rejected**
+   If the request is invalid or out of the municipality's scope.
+
+Each change generates a **notification** for the citizen.
+
+---
+
+### ✔ **3. Location Mapping (GIS Support)**
+
+Each request includes:
+
+* GPS coordinates
+* Map pin placement
+* Option for citizen to manually drag the pin
+* System stores coordinates for future analysis
+
+Admins can view **heatmaps** showing areas with many problems.
+
+---
+
+### ✔ **4. Image and File Attachments**
+
+Citizens and employees can upload pictures for:
+
+* Before and after
+* Damage proof
+* Repair evidence
+* Additional documents
+
+Images help admins verify authenticity.
+
+---
+
+### ✔ **5. Real-Time Notifications**
+
+Notifications are sent via:
+
+* Mobile push notification
+* Email
+* SMS (optional)
+* In-app notification panel
+
+When?
+
+* Request submitted
+* Assigned to a worker
+* Status updated
+* Completed
+* Additional info needed
+
+---
+
+### ✔ **6. Employee Work Dashboard**
+
+Municipal workers have a simple dashboard showing:
+
+* Requests assigned to them
+* Map of request locations
+* Deadline (if set by admin)
+* Notes from admin
+* Button to update status
+* Button to upload repair photos
+
+---
+
+### ✔ **7. Admin Management Tools**
+
+Admins have the most advanced panel:
+
+#### Admin can:
+
+* View all requests across all departments
+* Filter by category, status, location, date, worker
+* Assign requests to employees
+* Escalate overdue tasks
+* Analyze trends (statistics dashboards)
+* Export reports (PDF/Excel)
+* Manage users (add employees/admins)
+* Manage categories and departments
+
+#### Admin dashboards include:
+
+* How many requests submitted today
+* How many completed
+* Time taken to resolve
+* Top 5 problem categories
+* Area with the most issues
+* Employee performance ranking
+
+---
+
+### ✔ **8. Audit Trail / Timeline**
+
+Each request keeps a full history of actions:
+
+* Who created the request
+* Assignments
+* Status changes
+* Comments
+* Photos uploaded
+* Completion proof
+
+This ensures **transparency** and prevents corruption or manipulation.
+
+---
+
+### ✔ **9. Citizen Feedback and Rating**
+
+After completion:
+
+* Citizen can confirm “Satisfied” or “Not satisfied”
+* Citizen may leave a comment
+* Negative feedback reopens the request or sends it to admin
+
+---
+
+### ✔ **10. Multi-Department Management**
+
+Different municipal departments:
+
+* Water
+* Roads
+* Sanitation
+* Housing
+* Electricity
+* Streetlights
+* ID/Administrative services
+
+Each department sees only its own tasks unless admin overrides.
+
+---
+
+# 4. **How the System Fits Into Your Existing Structure**
+
+You mentioned:
+
+* **Users table already exists**
+* **Places table can be replaced with Requests**
+
+Here’s how it fits:
+
+### Users
+
+* Citizens → existing user role
+* Employees → same user table, different role
+* Admin → same user table, admin role
+
+### Requests (replaces Places)
+
+Instead of storing locations for "places," you store:
+
+* Request details
+* Location
+* Images
+* Status
+* Assigned employee
+
+### Add New Tables (Descriptions only, not code)
+
+1. **Departments**
+   For grouping employees and routing requests.
+
+2. **Categories**
+   For classifying problems.
+
+3. **Notifications**
+   To store history of alerts sent to users.
+
+4. **Audit Logs**
+   For activity tracking.
+
+---
+
+# 5. **High-Level System Workflow**
+
+### Step 1 — Citizen Submits
+
+The citizen fills a form and sends photos + location.
+
+### Step 2 — System Categorizes
+
+The admin dashboard receives the request and shows it under the appropriate department.
+
+### Step 3 — Admin Assigns
+
+Admin selects a worker or lets department auto-assign.
+
+### Step 4 — Employee Works
+
+Employee goes to the field, repairs or investigates, then updates:
+
+* Notes
+* Photos
+* Status (“In Progress” or “Completed”)
+
+### Step 5 — Citizen Reviews
+
+Citizen gets notified and checks proof.
+
+### Step 6 — Request Closed
+
+Citizen marks it as **Satisfied**, or it is automatically closed after admin approval.
+
+---
+
+# 6. **Benefits of the System**
+
+### For Citizens:
+
+* Easy reporting
+* No need to visit office physically
+* More transparency
+* Real-time status updates
+* Faster response times
+
+### For Municipality:
+
+* Better resource planning
+* Track employee performance
+* Identify problem hotspots
+* Improve service delivery
+* Digital records reduce paperwork
+* Prevents corruption
+* Data-based decision making
+
+---
+
+# 7. **Additional Optional Features**
+
+### 1. Public Transparency Dashboard
+
+Shows citizens:
+
+* Number of issues resolved
+* Average response time
+* Problem categories trending
+
+(No personal data shared.)
+
+### 2. AI-powered categorization
+
+Automatically categorizes requests based on description or image.
+
+### 3. Offline mode (for employees)
+
+Workers in areas with no network can still log progress offline.
+
+### 4. QR Codes for Public Infrastructure
+
+Citizens can scan QR placed on:
+
+* Public toilets
+* Street lights
+* Waste bins
+* Government buildings
+
+And directly create a request.
+
+### 5. Multi-language support
+
+Support for Amharic, Afaan Oromo, Tigrinya, Somali, English.
+
+---
+
+# 8. **Summary (Simple Version)**
+
+This system is like a **city problem reporting app** where:
+
+* Citizens report issues
+* Municipality assigns workers
+* Workers fix the issues
+* Admins track everything
+* Everyone sees progress real-time
+
+---
+
+

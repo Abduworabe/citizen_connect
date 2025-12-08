@@ -4,27 +4,38 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { mockRequests } from "@/lib/mock-data";
 import { RequestCard } from "@/components/request-card";
-import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from "recharts";
-import { ArrowRight, AlertTriangle, CheckCircle, Clock } from "lucide-react";
+import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts";
+import { ArrowRight, AlertTriangle, CheckCircle, Clock, TrendingUp, Users } from "lucide-react";
 import { Link } from "wouter";
+import { useData } from "@/context/data-context";
 
 export default function AdminDashboard() {
-  const pendingCount = mockRequests.filter(r => r.status === 'pending').length;
-  const inProgressCount = mockRequests.filter(r => r.status === 'in_progress').length;
-  const resolvedCount = mockRequests.filter(r => r.status === 'resolved').length;
-  const highPriorityCount = mockRequests.filter(r => r.priority === 'high' || r.priority === 'critical').length;
+  const { requests } = useData();
+  
+  const pendingCount = requests.filter(r => r.status === 'pending').length;
+  const inProgressCount = requests.filter(r => r.status === 'in_progress' || r.status === 'assigned').length;
+  const resolvedCount = requests.filter(r => r.status === 'completed' || r.status === 'closed').length;
+  const highPriorityCount = requests.filter(r => r.priority === 'high' || r.priority === 'critical').length;
 
   const statusData = [
     { name: 'Pending', value: pendingCount, color: '#eab308' },
     { name: 'In Progress', value: inProgressCount, color: '#3b82f6' },
-    { name: 'Resolved', value: resolvedCount, color: '#22c55e' },
+    { name: 'Completed', value: resolvedCount, color: '#22c55e' },
   ];
 
   const typeData = [
-    { name: 'Water', value: mockRequests.filter(r => r.type === 'water').length },
-    { name: 'Road', value: mockRequests.filter(r => r.type === 'road').length },
-    { name: 'Sanitation', value: mockRequests.filter(r => r.type === 'sanitation').length },
-    { name: 'Electric', value: mockRequests.filter(r => r.type === 'electrical').length },
+    { name: 'Water', value: requests.filter(r => r.type === 'water').length },
+    { name: 'Road', value: requests.filter(r => r.type === 'road').length },
+    { name: 'Sanitation', value: requests.filter(r => r.type === 'sanitation').length },
+    { name: 'Electric', value: requests.filter(r => r.type === 'electrical').length },
+  ];
+
+  // Mock Employee Performance Data
+  const employeePerformance = [
+    { name: 'Sarah W.', department: 'Water', tasks: 12, rating: 4.8 },
+    { name: 'Mike C.', department: 'Road', tasks: 8, rating: 4.5 },
+    { name: 'John D.', department: 'Sanitation', tasks: 15, rating: 4.9 },
+    { name: 'Lisa M.', department: 'Electrical', tasks: 10, rating: 4.7 },
   ];
 
   return (
@@ -47,7 +58,7 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-blue-600">Total Requests</p>
-                <div className="text-3xl font-bold text-blue-700 mt-2">{mockRequests.length}</div>
+                <div className="text-3xl font-bold text-blue-700 mt-2">{requests.length}</div>
               </div>
               <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
                 <Clock className="h-5 w-5" />
@@ -96,6 +107,61 @@ export default function AdminDashboard() {
               </div>
             </div>
           </CardContent>
+        </Card>
+      </div>
+
+      {/* New Employee Performance Section */}
+      <div className="grid lg:grid-cols-3 gap-6 mb-8">
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Top Performing Employees</CardTitle>
+            <CardDescription>Based on tasks completed and citizen feedback.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {employeePerformance.map((emp, i) => (
+                <div key={i} className="flex items-center justify-between p-3 bg-muted/40 rounded-lg">
+                   <div className="flex items-center gap-3">
+                      <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">
+                        {emp.name.split(' ')[0][0]}{emp.name.split(' ')[1][0]}
+                      </div>
+                      <div>
+                        <div className="font-medium">{emp.name}</div>
+                        <div className="text-xs text-muted-foreground">{emp.department} Dept</div>
+                      </div>
+                   </div>
+                   <div className="flex items-center gap-6 text-sm">
+                      <div className="text-center">
+                        <div className="font-bold">{emp.tasks}</div>
+                        <div className="text-xs text-muted-foreground">Tasks</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="font-bold text-green-600">{emp.rating} ★</div>
+                        <div className="text-xs text-muted-foreground">Rating</div>
+                      </div>
+                   </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+           <CardHeader>
+              <CardTitle>Problem Heatmap</CardTitle>
+              <CardDescription>High density issue areas</CardDescription>
+           </CardHeader>
+           <CardContent className="h-[300px] p-0 overflow-hidden relative">
+              {/* Mock Heatmap Visual */}
+              <div className="absolute inset-0 bg-muted/30">
+                 <div className="absolute top-1/4 left-1/4 w-24 h-24 bg-red-500/20 rounded-full blur-xl"></div>
+                 <div className="absolute top-1/2 right-1/3 w-32 h-32 bg-orange-500/20 rounded-full blur-xl"></div>
+                 <div className="absolute bottom-1/4 left-1/2 w-16 h-16 bg-yellow-500/20 rounded-full blur-xl"></div>
+                 <div className="w-full h-full flex items-center justify-center text-muted-foreground/50 font-medium">
+                    Interactive Map Integration
+                 </div>
+              </div>
+           </CardContent>
         </Card>
       </div>
 
@@ -164,7 +230,7 @@ export default function AdminDashboard() {
         </div>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {mockRequests.slice(0, 3).map(req => (
+          {requests.slice(0, 3).map(req => (
             <RequestCard key={req.id} request={req} />
           ))}
         </div>

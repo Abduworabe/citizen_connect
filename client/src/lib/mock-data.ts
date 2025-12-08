@@ -1,4 +1,4 @@
-export type RequestStatus = "pending" | "in_progress" | "resolved" | "rejected";
+export type RequestStatus = "pending" | "assigned" | "in_progress" | "completed" | "closed" | "rejected";
 export type RequestPriority = "low" | "medium" | "high" | "critical";
 export type Department = "water" | "road" | "sanitation" | "electrical" | "support";
 export type UserRole = "citizen" | "employee" | "admin";

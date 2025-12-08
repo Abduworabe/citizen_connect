@@ -8,15 +8,19 @@ import { formatDistanceToNow } from "date-fns";
 
 const statusColors = {
   pending: "bg-yellow-500/10 text-yellow-600 border-yellow-200",
+  assigned: "bg-purple-500/10 text-purple-600 border-purple-200",
   in_progress: "bg-blue-500/10 text-blue-600 border-blue-200",
-  resolved: "bg-green-500/10 text-green-600 border-green-200",
+  completed: "bg-teal-500/10 text-teal-600 border-teal-200",
+  closed: "bg-green-500/10 text-green-600 border-green-200",
   rejected: "bg-red-500/10 text-red-600 border-red-200",
 };
 
 const statusLabels = {
   pending: "Pending",
+  assigned: "Assigned",
   in_progress: "In Progress",
-  resolved: "Resolved",
+  completed: "Work Done",
+  closed: "Closed (Verified)",
   rejected: "Rejected",
 };
 

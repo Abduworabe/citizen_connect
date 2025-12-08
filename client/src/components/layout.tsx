@@ -11,17 +11,25 @@ import {
   HardHat,
   ListTodo,
   BarChart3,
-  UserCircle
+  UserCircle,
+  Globe
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/context/auth-context";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [location, setLocation] = useLocation();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const { user, logout } = useAuth();
+  const [lang, setLang] = useState("English");
 
   const handleLogout = () => {
     logout();
@@ -90,6 +98,24 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </nav>
 
       <div className="p-4 border-t border-border/40 space-y-4">
+        
+        {/* Language Switcher */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="w-full justify-start gap-3 text-muted-foreground hover:text-primary">
+              <Globe className="h-5 w-5" />
+              <span>{lang}</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-56">
+             <DropdownMenuItem onClick={() => setLang("English")}>English</DropdownMenuItem>
+             <DropdownMenuItem onClick={() => setLang("Amharic")}>Amharic (አማርኛ)</DropdownMenuItem>
+             <DropdownMenuItem onClick={() => setLang("Afaan Oromo")}>Afaan Oromo</DropdownMenuItem>
+             <DropdownMenuItem onClick={() => setLang("Tigrinya")}>Tigrinya (ትግርኛ)</DropdownMenuItem>
+             <DropdownMenuItem onClick={() => setLang("Somali")}>Somali</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         {user && (
           <div className="flex items-center gap-3 px-2">
             <Avatar className="h-9 w-9 border border-border">

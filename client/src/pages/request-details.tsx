@@ -17,8 +17,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const statusSteps = [
   { id: "pending", label: "Request Received", description: "Your request has been logged." },
-  { id: "in_progress", label: "In Progress", description: "A team has been assigned." },
-  { id: "resolved", label: "Resolved", description: "The issue has been fixed." },
+  { id: "assigned", label: "Assigned", description: "A team has been assigned." },
+  { id: "in_progress", label: "In Progress", description: "Work is currently underway." },
+  { id: "completed", label: "Work Completed", description: "The team has finished the repairs." },
+  { id: "closed", label: "Closed", description: "Verified and closed by citizen." },
 ];
 
 export default function RequestDetails() {
@@ -43,8 +45,9 @@ export default function RequestDetails() {
     );
   }
 
+  // Handle mapped statuses for progress bar (simplified)
   const currentStepIndex = statusSteps.findIndex(s => s.id === request.status);
-
+  
   const handleStatusChange = (newStatus: RequestStatus) => {
     updateRequestStatus(request.id, newStatus);
   };
@@ -56,6 +59,7 @@ export default function RequestDetails() {
   };
 
   const canEditStatus = user?.role === 'admin' || (user?.role === 'employee' && request.assignedTo === user.id);
+  const canCloseRequest = user?.role === 'citizen' && request.citizenId === user.id && request.status === 'completed';
 
   return (
     <Layout>
@@ -70,8 +74,11 @@ export default function RequestDetails() {
                 {request.id}
               </Badge>
               <Badge className={`capitalize 
-                ${request.status === 'resolved' ? 'bg-green-500 hover:bg-green-600' :
+                ${request.status === 'closed' ? 'bg-green-500 hover:bg-green-600' :
+                request.status === 'completed' ? 'bg-teal-500 hover:bg-teal-600' :
                 request.status === 'in_progress' ? 'bg-blue-500 hover:bg-blue-600' :
+                request.status === 'assigned' ? 'bg-purple-500 hover:bg-purple-600' :
+                request.status === 'rejected' ? 'bg-red-500 hover:bg-red-600' :
                 'bg-yellow-500 hover:bg-yellow-600'
               }`}>
                 {request.status.replace('_', ' ')}
@@ -91,22 +98,34 @@ export default function RequestDetails() {
             </div>
           </div>
           
-          {canEditStatus && (
-            <div className="flex items-center gap-2 bg-card p-2 rounded-lg border border-border/60 shadow-sm">
-              <span className="text-sm font-medium pl-2">Update Status:</span>
-              <Select value={request.status} onValueChange={(val) => handleStatusChange(val as RequestStatus)}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Change Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="pending">Pending</SelectItem>
-                  <SelectItem value="in_progress">In Progress</SelectItem>
-                  <SelectItem value="resolved">Resolved</SelectItem>
-                  <SelectItem value="rejected">Rejected</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          )}
+          <div className="flex gap-2">
+            {canEditStatus && (
+              <div className="flex items-center gap-2 bg-card p-2 rounded-lg border border-border/60 shadow-sm">
+                <span className="text-sm font-medium pl-2">Update Status:</span>
+                <Select value={request.status} onValueChange={(val) => handleStatusChange(val as RequestStatus)}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Change Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="assigned">Assigned</SelectItem>
+                    <SelectItem value="in_progress">In Progress</SelectItem>
+                    <SelectItem value="completed">Work Completed</SelectItem>
+                    <SelectItem value="rejected">Rejected</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            {canCloseRequest && (
+              <Button 
+                className="bg-green-600 hover:bg-green-700 text-white shadow-md animate-pulse"
+                onClick={() => handleStatusChange('closed')}
+              >
+                Verify & Close Request
+              </Button>
+            )}
+          </div>
         </div>
       </div>
 

@@ -10,10 +10,12 @@ import RoleSelect from "@/pages/role-select";
 import Dashboard from "@/pages/dashboard";
 import SubmitRequest from "@/pages/submit-request";
 import RequestDetails from "@/pages/request-details";
-
-// Placeholder pages for now - we will build these next
-const AdminDashboard = () => <div className="p-10">Admin Dashboard (Coming Soon)</div>;
-const EmployeeDashboard = () => <div className="p-10">Employee Dashboard (Coming Soon)</div>;
+import AdminDashboard from "@/pages/admin-dashboard";
+import AdminRequests from "@/pages/admin-requests";
+import AdminUsers from "@/pages/admin-users";
+import EmployeeDashboard from "@/pages/employee-dashboard";
+import EmployeeRequests from "@/pages/employee-requests";
+import CitizenRequests from "@/pages/citizen-requests";
 
 function Router() {
   return (
@@ -22,8 +24,19 @@ function Router() {
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/submit" component={SubmitRequest} />
       <Route path="/request/:id" component={RequestDetails} />
+      
+      {/* Admin Routes */}
       <Route path="/admin" component={AdminDashboard} />
+      <Route path="/admin/requests" component={AdminRequests} />
+      <Route path="/admin/users" component={AdminUsers} />
+
+      {/* Employee Routes */}
       <Route path="/employee" component={EmployeeDashboard} />
+      <Route path="/employee/requests" component={EmployeeRequests} />
+
+      {/* Citizen Routes */}
+      <Route path="/requests" component={CitizenRequests} />
+
       <Route component={NotFound} />
     </Switch>
   );

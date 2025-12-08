@@ -10,12 +10,14 @@ const statusColors = {
   pending: "bg-yellow-500/10 text-yellow-600 border-yellow-200",
   in_progress: "bg-blue-500/10 text-blue-600 border-blue-200",
   resolved: "bg-green-500/10 text-green-600 border-green-200",
+  rejected: "bg-red-500/10 text-red-600 border-red-200",
 };
 
 const statusLabels = {
   pending: "Pending",
   in_progress: "In Progress",
   resolved: "Resolved",
+  rejected: "Rejected",
 };
 
 export function RequestCard({ request }: { request: ServiceRequest }) {

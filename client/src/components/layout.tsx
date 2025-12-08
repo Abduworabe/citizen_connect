@@ -2,26 +2,61 @@ import { Link, useLocation } from "wouter";
 import { useState } from "react";
 import { 
   Menu, 
-  X, 
   Home, 
   LayoutDashboard, 
   PlusCircle, 
-  Settings, 
   LogOut,
-  MapPin
+  MapPin,
+  ShieldCheck,
+  HardHat,
+  ListTodo,
+  BarChart3,
+  UserCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useAuth } from "@/context/auth-context";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const { user, logout } = useAuth();
 
-  const navItems = [
-    { label: "Home", icon: Home, href: "/" },
-    { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
-    { label: "New Request", icon: PlusCircle, href: "/submit" },
-  ];
+  const handleLogout = () => {
+    logout();
+    setLocation("/");
+  };
+
+  const getNavItems = () => {
+    if (!user) return [
+      { label: "Home", icon: Home, href: "/" },
+      { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
+    ];
+
+    switch (user.role) {
+      case "admin":
+        return [
+          { label: "Admin Overview", icon: BarChart3, href: "/admin" },
+          { label: "Manage Requests", icon: ListTodo, href: "/admin/requests" },
+          { label: "Users & Staff", icon: ShieldCheck, href: "/admin/users" },
+        ];
+      case "employee":
+        return [
+          { label: "My Tasks", icon: HardHat, href: "/employee" },
+          { label: "All Requests", icon: LayoutDashboard, href: "/employee/requests" },
+        ];
+      case "citizen":
+      default:
+        return [
+          { label: "Home", icon: Home, href: "/dashboard" },
+          { label: "My Requests", icon: ListTodo, href: "/requests" },
+          { label: "New Request", icon: PlusCircle, href: "/submit" },
+        ];
+    }
+  };
+
+  const navItems = getNavItems();
 
   const NavContent = () => (
     <div className="flex flex-col h-full">
@@ -54,10 +89,26 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         })}
       </nav>
 
-      <div className="p-4 border-t border-border/40">
-        <Button variant="ghost" className="w-full justify-start gap-3 text-muted-foreground hover:text-destructive hover:bg-destructive/10">
+      <div className="p-4 border-t border-border/40 space-y-4">
+        {user && (
+          <div className="flex items-center gap-3 px-2">
+            <Avatar className="h-9 w-9 border border-border">
+              <AvatarImage src={user.avatar} />
+              <AvatarFallback><UserCircle className="h-6 w-6" /></AvatarFallback>
+            </Avatar>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium leading-none truncate">{user.name}</p>
+              <p className="text-xs text-muted-foreground truncate mt-1 capitalize">{user.role}</p>
+            </div>
+          </div>
+        )}
+        <Button 
+          variant="ghost" 
+          className="w-full justify-start gap-3 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+          onClick={handleLogout}
+        >
           <LogOut className="h-5 w-5" />
-          Sign Out
+          {user ? 'Sign Out' : 'Back to Role Select'}
         </Button>
       </div>
     </div>

@@ -2,16 +2,17 @@ import Layout from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { mockRequests } from "@/lib/mock-data";
+import { useData } from "@/context/data-context";
 import { RequestCard } from "@/components/request-card";
 import { Search, Filter } from "lucide-react";
 import { useState } from "react";
 
 export default function Dashboard() {
+  const { requests } = useData();
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
 
-  const filteredRequests = mockRequests.filter(req => {
+  const filteredRequests = requests.filter(req => {
     const matchesFilter = filter === "all" || req.status === filter;
     const matchesSearch = req.title.toLowerCase().includes(search.toLowerCase()) || 
                           req.location.toLowerCase().includes(search.toLowerCase());

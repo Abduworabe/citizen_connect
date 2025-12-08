@@ -1,5 +1,5 @@
 import Layout from "@/components/layout";
-import { mockRequests } from "@/lib/mock-data";
+import { useData } from "@/context/data-context";
 import { RequestCard } from "@/components/request-card";
 import { useAuth } from "@/context/auth-context";
 import { Button } from "@/components/ui/button";
@@ -8,11 +8,10 @@ import { PlusCircle } from "lucide-react";
 
 export default function CitizenRequests() {
   const { user } = useAuth();
+  const { requests } = useData();
   
   // Filter for requests created by this citizen
-  // For mock purposes, we'll assume the logged-in user is 'user-citizen-1' if they are a citizen
-  // or we just show a subset
-  const myRequests = mockRequests.filter(r => r.citizenId === user?.id || r.citizenId === 'user-citizen-1');
+  const myRequests = requests.filter(r => r.citizenId === user?.id || r.citizenId === 'user-citizen-1');
 
   return (
     <Layout>

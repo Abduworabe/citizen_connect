@@ -11,6 +11,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import { Upload, MapPin } from "lucide-react";
+import { useData } from "@/context/data-context";
 
 const formSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters"),
@@ -22,6 +23,7 @@ const formSchema = z.object({
 export default function SubmitRequest() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  const { addRequest } = useData();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -33,15 +35,25 @@ export default function SubmitRequest() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    // Add to context
+    addRequest({
+      title: values.title,
+      type: values.type as any,
+      description: values.description,
+      location: values.location,
+      department: values.type as any, // Simple mapping for now
+      imageUrl: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80&w=1000", // Placeholder image for demo
+    });
+
     toast({
       title: "Request Submitted Successfully",
-      description: "Your reference number is #REQ-NEW-001. We'll update you soon.",
+      description: "Your report has been logged and assigned a reference number.",
     });
+    
     // Simulate delay then redirect
     setTimeout(() => {
       setLocation("/dashboard");
-    }, 1500);
+    }, 1000);
   }
 
   return (
@@ -74,7 +86,7 @@ export default function SubmitRequest() {
                         <SelectItem value="water">Water Leak / Pipeline</SelectItem>
                         <SelectItem value="garbage">Garbage Collection</SelectItem>
                         <SelectItem value="road">Road Repair / Pothole</SelectItem>
-                        <SelectItem value="street_light">Street Light Issue</SelectItem>
+                        <SelectItem value="electrical">Street Light / Electrical</SelectItem>
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>

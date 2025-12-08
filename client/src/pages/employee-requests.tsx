@@ -1,12 +1,12 @@
 import Layout from "@/components/layout";
 import { Button } from "@/components/ui/button";
-import { mockRequests } from "@/lib/mock-data";
+import { useData } from "@/context/data-context";
 import { RequestCard } from "@/components/request-card";
 import { Filter } from "lucide-react";
 
 export default function EmployeeAllRequests() {
-  // Employees can see all requests to pick up unassigned ones
-  const allRequests = mockRequests;
+  const { requests } = useData();
+  const allRequests = requests;
 
   return (
     <Layout>

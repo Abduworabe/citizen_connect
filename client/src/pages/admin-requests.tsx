@@ -2,8 +2,8 @@ import Layout from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { mockRequests } from "@/lib/mock-data";
-import { Eye, MoreHorizontal, ArrowUpDown, Filter } from "lucide-react";
+import { useData } from "@/context/data-context";
+import { Eye, MoreHorizontal, Filter } from "lucide-react";
 import { Link } from "wouter";
 import {
   DropdownMenu,
@@ -17,9 +17,10 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 
 export default function AdminRequests() {
+  const { requests } = useData();
   const [search, setSearch] = useState("");
 
-  const filteredRequests = mockRequests.filter(req => 
+  const filteredRequests = requests.filter(req => 
     req.title.toLowerCase().includes(search.toLowerCase()) ||
     req.id.toLowerCase().includes(search.toLowerCase())
   );

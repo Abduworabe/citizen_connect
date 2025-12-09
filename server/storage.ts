@@ -1,38 +1,46 @@
-import { type User, type InsertUser } from "@shared/schema";
-import { randomUUID } from "crypto";
+import dotenv from "dotenv";
+dotenv.config();
 
-// modify the interface with any CRUD methods
-// you might need
+import mongoose, { Schema, model } from "mongoose";
+import { type User, type InsertUser } from "@shared/schema";
+
+// connect to MongoDB
+mongoose
+  .connect(process.env.MONGO_URL!)
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.error("MongoDB connection error:", err));
+
+const userSchema = new Schema<User>(
+  {
+    username: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    email: String,
+  },
+  { timestamps: true }
+);
+
+const UserModel = model<User>("User", userSchema);
 
 export interface IStorage {
-  getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
+  getUser(id: string): Promise<User | null>;
+  getUserByUsername(username: string): Promise<User | null>;
   createUser(user: InsertUser): Promise<User>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
-
-  constructor() {
-    this.users = new Map();
+export class MongoStorage implements IStorage {
+  async getUser(id: string): Promise<User | null> {
+    return UserModel.findById(id).lean();
   }
 
-  async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
-  }
-
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+  async getUserByUsername(username: string): Promise<User | null> {
+    return UserModel.findOne({ username }).lean();
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
-    return user;
+    const user = new UserModel(insertUser);
+    await user.save();
+    return user.toObject();
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new MongoStorage();
